@@ -64,7 +64,7 @@
             
             // Get Urls from The html Form 
             var original = document.getElementById("linkInput").value;
-            var short = document.getElementById("linkNameInput").value.trim().split('/').pop();
+            var short = document.getElementById("linkNameInput").value.trim();
 
             const response = await fetch("/shorten", {
                 method: "POST",

@@ -60,7 +60,7 @@ app.post("/shorten", (req, res) => {
         }
 
         db.run("INSERT INTO urls (original, short, qrPath) VALUES (?, ?, ?)", 
-            [original, short, `/uploads/${qrFilename}`], (err) => {
+            [original, short.split('/').pop(), `/uploads/${qrFilename}`], (err) => {
             if (err) {
                 console.error("❌ Error inserting into database:", err);
                 return res.status(500).json({ error: "❌ حدث خطأ أثناء حفظ البيانات." });
