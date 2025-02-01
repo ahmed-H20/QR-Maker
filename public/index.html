@@ -5,13 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إنشاء QR Code</title>
     <style>
-        #qrcode {
-            margin-top: 20px;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
             text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            direction: rtl;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+            direction: rtl;
+        }
+        input {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        ::placeholder {
+            direction: rtl;
+            text-align: right;
+        }
+        #urlList {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
         }
         .qr-item {
             display: flex;
-            flex-direction: column; /* لجعل العناصر فوق بعض */
+            flex-direction: column;
             align-items: center;
             margin: 20px 0;
         }
@@ -24,29 +83,38 @@
             text-decoration: none;
             color: blue;
             font-size: 18px;
+            margin-top: 10px;
         }
+
+        
     </style>
 </head>
 <body>
-<div>    
-    <h2 dir="rtl">إنشاء QR Code من رابط</h2>
-    
-    <form id="linkForm" dir="rtl" >
-        <label for="linkInput">الرابط الأصلي:</label>
-        <input type="url" id="linkInput" placeholder="أدخل رابط" required>
-        <br><br>
-
-        <label for="linkNameInput">الرابط الوهمى:</label>
-        <input type="text" id="linkNameInput" placeholder="مثلاً: mylink123" required>
-        <br><br>
-
-        <button type="submit">إنشاء QR Code</button>
-    </form>
+    <div class="container">
+        <h2>إنشاء QR Code من رابط</h2>
+        <form id="linkForm">
+          <label for="linkInput">الرابط الأصلي:</label>
+          <input
+            type="url"
+            id="linkInput"
+            placeholder="أدخل الرابط الأصلي"
+            required
+          />
+  
+          <label for="linkNameInput">الرابط الوهمى:</label>
+          <input
+            type="text"
+            id="linkNameInput"
+            placeholder="أدخل الرابط المزيف"
+            required
+          />
+  
+          <button type="submit">إنشاء QR Code</button>
+        </form>
 
    <ul id="urlList"></ul>
-</div>
 
-<div>
+   <div>
     <h2 dir="rtl">فك الرابط الوهمى</h2>
     
     <form id="redirector" dir="rtl" >
@@ -55,6 +123,10 @@
 
         <button type="submit">تحويل</button>
     </form>
+
+    </div>
+</div>
+
 
 </div>
 
