@@ -28,9 +28,7 @@
     </style>
 </head>
 <body>
-<div 
-    >
-    
+<div>    
     <h2 dir="rtl">إنشاء QR Code من رابط</h2>
     
     <form id="linkForm" dir="rtl" >
@@ -46,6 +44,18 @@
     </form>
 
    <ul id="urlList"></ul>
+</div>
+
+<div>
+    <h2 dir="rtl">فك الرابط الوهمى</h2>
+    
+    <form id="redirector" dir="rtl" >
+        <label for="fakeurl">الرابط الوهمى:</label>
+        <input type="text" id="fakeurl" placeholder="أدخل رابط" required>        
+
+        <button type="submit">تحويل</button>
+    </form>
+
 </div>
 
     <script>
@@ -71,6 +81,36 @@
             }
         });
 
+        // redirecting function 
+        document.getElementById("redirector").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            var shortUrl = document.getElementById("fakeurl").value.trim(); // الرابط الوهمي
+            console.log(shortUrl)
+            if (!shortUrl) {
+                alert("⚠️ الرجاء إدخال الرابط الوهمي.");
+                return;
+            }
+
+            // send and redirect auto
+            try {
+                const response = await fetch(shortUrl, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                if (response.redirected) {
+                    window.location.href = response.url; // إعادة التوجيه إلى الرابط الأصلي
+                } else {
+                    alert("❌ الرابط غير موجود.");
+                }
+            } catch (error) {
+                console.error("حدث خطأ أثناء التحويل:", error);
+                alert("❌ حدث خطأ أثناء التحويل.");
+            }
+        });
+
+
         // Get All Urls
         async function fetchUrls() {
             const response = await fetch("/urls");
@@ -78,20 +118,23 @@
 
             const urlList = document.getElementById("urlList");
             urlList.innerHTML = "";
-
-            urls.forEach(url => {
+            console.log(urls)
+            if (urls.length > 0) {
+                 // Get the last element
+                const lastUrl = urls[urls.length - 1];
                 const li = document.createElement("li");
                 li.classList.add("qr-item");
-
                 li.innerHTML = `
-                    <a href="${url.short}" target="_blank">
-                        <img src="${url.qrPath}" alt="QR Code">
+                    <a href="${lastUrl.short}" target="_blank">
+                        <img src="${lastUrl.qrPath}" alt="QR Code">
                     </a>
-                    <a href="${url.short}" target="_blank">${url.short.split('/').pop()}</a>
+                    <a href="${lastUrl.short}" target="_blank">${lastUrl.short}</a>
                 `;
 
+                // Clear the list and add only the last URL item
+                urlList.innerHTML = ""; 
                 urlList.appendChild(li);
-            });
+            }
         }
 
         fetchUrls();
