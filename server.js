@@ -5,10 +5,13 @@ const bodyParser = require("body-parser");
 const qr = require("qrcode");
 const fs = require("fs");
 const path = require("path");
+const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const BASE_URL = "https://q3.up.railway.app/";
+
+app.use(cors());
 
 // Create Folder to save QR images
 const uploadDir = path.join(__dirname, "uploads");
@@ -40,13 +43,17 @@ app.post("/shorten", (req, res) => {
     if (!original || !short) {
         return res.status(400).json({ error: "❌ يجب إدخال الرابط الأصلي والمختصر." });
     }
-    console.log(short)
-    const shortUrl = short;
+    
+    // const shortUrl = `https://q3.up.railway.app/${short}`;
+    // const qrFilename = `${short.split('/').pop()}.png`;
+    // const qrPath = path.join(uploadDir, qrFilename);
+
+    const shortUrl = `${BASE_URL}/${short}`;
     const qrFilename = `${short.split('/').pop()}.png`;
     const qrPath = path.join(uploadDir, qrFilename);
 
     // Create QR
-    qr.toFile(qrPath, shortUrl, { errorCorrectionLevel: "H" }, (err) => {
+    qr.toFile(qrPath, short, { errorCorrectionLevel: "H" }, (err) => {
         if (err) {
             console.error("❌ Error generating QR Code:", err);
             return res.status(500).json({ error: "❌  حدث خطأ أثناء إنشاء QR Code." });
@@ -65,6 +72,7 @@ app.post("/shorten", (req, res) => {
                 short: shortUrl, 
                 qr: `/uploads/${qrFilename}` 
             });
+            console.log(res)
         });
     });
 });
@@ -78,7 +86,7 @@ app.get("/urls", (req, res) => {
 
         rows = rows.map(row => ({
             ...row,
-            short: `${row.short}`
+            short: `${BASE_URL}${row.short}`
         }));
 
         res.json(rows);
@@ -95,5 +103,16 @@ app.get("/:short", (req, res) => {
         res.redirect(row.original);
     });
 });
+
+
+// app.get("/:reshort", (req, res) => {
+//     const short = req.params.short;
+//     db.get("SELECT original FROM urls WHERE short = ?", [short], (err, row) => {
+//         if (err || !row) {
+//             return res.status(404).send("❌ الرابط غير موجود.");
+//         }
+//         res.send(row.original); // إرجاع الرابط كنص بدلاً من التوجيه
+//     });
+// });
 
 app.listen(PORT, () => console.log(`🚀 Server running on ${BASE_URL}`));

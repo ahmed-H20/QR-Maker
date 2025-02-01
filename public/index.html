@@ -85,28 +85,18 @@
         document.getElementById("redirector").addEventListener("submit", async function(event) {
             event.preventDefault();
             
-            var shortUrl = document.getElementById("fakeurl").value.trim(); // الرابط الوهمي
-            console.log(shortUrl)
-            if (!shortUrl) {
-                alert("⚠️ الرجاء إدخال الرابط الوهمي.");
+            var short = document.getElementById("fakeurl").value.trim();
+            console.log(short)
+            if (!short) {
+                alert("❌ الرجاء إدخال الرابط الوهمي!");
                 return;
             }
 
-            // send and redirect auto
-            try {
-                const response = await fetch(shortUrl, {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" }
-                });
+            try {        
 
-                if (response.redirected) {
-                    window.location.href = response.url; // إعادة التوجيه إلى الرابط الأصلي
-                } else {
-                    alert("❌ الرابط غير موجود.");
-                }
+                window.location.href = `https://q3.up.railway.app/${short}`;
             } catch (error) {
-                console.error("حدث خطأ أثناء التحويل:", error);
-                alert("❌ حدث خطأ أثناء التحويل.");
+                alert(error.message);
             }
         });
 
@@ -128,7 +118,7 @@
                     <a href="${lastUrl.short}" target="_blank">
                         <img src="${lastUrl.qrPath}" alt="QR Code">
                     </a>
-                    <a href="${lastUrl.short}" target="_blank">${lastUrl.short}</a>
+                    <a href="${lastUrl.short}" target="_blank">${lastUrl.short.split('/').pop().split('/').pop()}</a>
                 `;
 
                 // Clear the list and add only the last URL item
