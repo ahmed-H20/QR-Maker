@@ -48,7 +48,7 @@ app.post("/shorten", (req, res) => {
     // const qrFilename = `${short.split('/').pop()}.png`;
     // const qrPath = path.join(uploadDir, qrFilename);
 
-    const shortUrl = `${BASE_URL}/${short}`;
+    const shortUrl = `${BASE_URL}/${short.split('/').pop()}`;
     const qrFilename = `${short.split('/').pop()}.png`;
     const qrPath = path.join(uploadDir, qrFilename);
 
